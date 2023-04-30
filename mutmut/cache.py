@@ -55,7 +55,10 @@ def init_db(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if db.provider is None:
-            cache_filename = os.path.join(os.getcwd(), '.mutmut-cache')
+            # Get the env variable MUTMUT_CACHE_FILENAME if it exists, otherwise use the default
+            print('Using cache: {}'.format(os.environ.get('MUTMUT_CACHE_FILENAME', '.mutmut-cache')))
+            cache_filename = os.environ.get('MUTMUT_CACHE_FILENAME', '.mutmut-cache')
+            cache_filename = os.path.join(os.getcwd(), cache_filename)
             db.bind(provider='sqlite', filename=cache_filename, create_db=True)
 
             try:
